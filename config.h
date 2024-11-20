@@ -1,4 +1,5 @@
 /* See LICENSE file for copyright and license details. */
+#include <X11/XF86keysym.h>
 
 /* appearance */
 static const unsigned int borderpx  = 3;        /* border pixel of windows */
@@ -58,13 +59,36 @@ static const Layout layouts[] = {
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
-static const char *termcmd[]  = { "st", NULL };
-static const char *browsercmd[]  = { "vimb", NULL };
+
+static const char *st[]  = { "st", NULL };
+static const char *tmuxSt[]  = { "bash" , "/home/babu/scripts/tmux-st.sh", NULL };
+
+static const char *browsercmd[]  = { "qutebrowser", NULL };
+
+static const char *binc[]  = { "brightnessctl", "set" , "5%+" , NULL };
+static const char *bdec[]  = { "brightnessctl", "set" , "5%-" , NULL };
+
+static const char *vup[]  = { "pulseaudio-ctl", "up" , "5" , NULL };
+static const char *vdown[]  = { "pulseaudio-ctl", "down" , "5" , NULL };
+static const char *vmute[]  = { "pulseaudio-ctl", "mute" , NULL };
 
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
-	{ MODKEY,			XK_f,	   spawn,	   {.v = termcmd } },
+	{ MODKEY,			XK_f,	   spawn,	   {.v = st } },
+	{ MODKEY,			XK_g,	   spawn,	   {.v = tmuxSt } },
+
+	{ MODKEY,			XF86XK_MonBrightnessUp,	   spawn,	   {.v = binc } },
+	{ MODKEY,			XF86XK_MonBrightnessDown,  spawn,	   {.v = bdec } },
+
+	{ 0,			XF86XK_AudioRaiseVolume,  spawn,	   {.v = vup } },
+	{ 0,			XF86XK_AudioLowerVolume,  spawn,	   {.v = vdown } },
+	{ 0,			XF86XK_AudioMute,	  spawn,	   {.v = vmute } },
+
+//#define XF86XK_AudioLowerVolume      0x1008ff11  /* Volume control down        */
+//#define XF86XK_AudioMute             0x1008ff12  /* Mute sound from the system */
+//#define XF86XK_AudioRaiseVolume      0x1008ff13  /* Volume control up          */
+
 	{ MODKEY,			XK_t,	   spawn,	   {.v = browsercmd } },
 
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
@@ -106,7 +130,7 @@ static const Button buttons[] = {
 	{ ClkLtSymbol,          0,              Button1,        setlayout,      {0} },
 	{ ClkLtSymbol,          0,              Button3,        setlayout,      {.v = &layouts[2]} },
 	{ ClkWinTitle,          0,              Button2,        zoom,           {0} },
-	{ ClkStatusText,        0,              Button2,        spawn,          {.v = termcmd } },
+	{ ClkStatusText,        0,              Button2,        spawn,          {.v = st } },
 	{ ClkClientWin,         MODKEY,         Button1,        movemouse,      {0} },
 	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0} },
 	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0} },
